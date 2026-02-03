@@ -40,16 +40,20 @@ Built with a focus on performance and modern UI standards:
 1. Clone the repo
 
    ```sh
-   git clone <YOUR_GIT_URL>
+   git clone https://github.com/arnau-catala14/meeting-money-clock.git
    ```
 
 2. Install dependencies
 
-npm install
+   ```sh
+   npm install
+   ```
 
 3. Run development server
 
-npm run dev
+   ```sh
+   npm run dev
+   ```
 
 ## ⚠️ Disclaimer
 
