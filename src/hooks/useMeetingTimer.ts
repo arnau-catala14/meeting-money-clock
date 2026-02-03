@@ -41,10 +41,11 @@ export function useMeetingTimer(config: MeetingConfig) {
 
   const [costHistory, setCostHistory] = useState<CostDataPoint[]>([]);
   
-  const animationFrameRef = useRef<number | null>(null);
-  const startTimeRef = useRef<number | null>(null);
-  const pausedTimeRef = useRef<number>(0);
-  const lastUpdateRef = useRef<number>(0);
+  // Refs for precise time tracking logic
+  const startTimeRef = useRef<number | null>(null);     // When the current active segment started (Date.now())
+  const accumulatedTimeRef = useRef<number>(0);         // Total time accumulated from previous segments (ms)
+  const lastUpdateRef = useRef<number>(0);              // Last second we updated history for
+  const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const costPerSecond = (config.attendees * config.hourlyRate) / 3600;
 
@@ -55,83 +56,104 @@ export function useMeetingTimer(config: MeetingConfig) {
     return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   }, []);
 
-  const tick = useCallback((timestamp: number) => {
-    if (!startTimeRef.current) {
-      startTimeRef.current = timestamp - pausedTimeRef.current;
+  // Main timer loop
+  useEffect(() => {
+    if (timerState.isRunning && !timerState.isPaused) {
+      // If we don't have a start time for this segment, set it now
+      // This handles the very first start or a resume
+      if (!startTimeRef.current) {
+        startTimeRef.current = Date.now();
+      }
+
+      timerIntervalRef.current = setInterval(() => {
+        if (!startTimeRef.current) return;
+
+        const now = Date.now();
+        const currentSegmentDuration = now - startTimeRef.current;
+        const totalElapsedMs = accumulatedTimeRef.current + currentSegmentDuration;
+        const elapsedSeconds = Math.floor(totalElapsedMs / 1000);
+        const totalCost = costPerSecond * (totalElapsedMs / 1000);
+
+        setMeetingData(prev => ({
+          ...prev,
+          elapsedSeconds,
+          totalCost,
+          costPerSecond,
+        }));
+
+        // Update cost history every 5 seconds
+        if (elapsedSeconds > 0 && elapsedSeconds % 5 === 0 && elapsedSeconds !== lastUpdateRef.current) {
+          lastUpdateRef.current = elapsedSeconds;
+          setCostHistory(prev => [
+            ...prev,
+            {
+              time: elapsedSeconds,
+              cost: totalCost,
+              label: formatTime(elapsedSeconds),
+            },
+          ]);
+        }
+      }, 100); // 100ms update rate for smoothness
+    } else {
+      // Clean up interval if not running or paused
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+        timerIntervalRef.current = null;
+      }
     }
 
-    const elapsed = timestamp - startTimeRef.current;
-    const elapsedSeconds = Math.floor(elapsed / 1000);
-    const totalCost = costPerSecond * (elapsed / 1000);
-
-    // Update cost history every 5 seconds
-    if (elapsedSeconds > 0 && elapsedSeconds % 5 === 0 && elapsedSeconds !== lastUpdateRef.current) {
-      lastUpdateRef.current = elapsedSeconds;
-      setCostHistory(prev => [
-        ...prev,
-        {
-          time: elapsedSeconds,
-          cost: totalCost,
-          label: formatTime(elapsedSeconds),
-        },
-      ]);
-    }
-
-    setMeetingData({
-      elapsedSeconds,
-      totalCost,
-      costPerSecond,
-      startTime: meetingData.startTime,
-      endTime: null,
-    });
-
-    animationFrameRef.current = requestAnimationFrame(tick);
-  }, [costPerSecond, formatTime, meetingData.startTime]);
+    return () => {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+      }
+    };
+  }, [timerState.isRunning, timerState.isPaused, costPerSecond, formatTime]);
 
   const start = useCallback(() => {
     const now = new Date();
-    setMeetingData(prev => ({
-      ...prev,
+    setMeetingData({
+      elapsedSeconds: 0,
+      totalCost: 0,
+      costPerSecond,
       startTime: now,
       endTime: null,
-    }));
+    });
     setCostHistory([{ time: 0, cost: 0, label: '00:00:00' }]);
-    setTimerState({ isRunning: true, isPaused: false });
-    startTimeRef.current = null;
-    pausedTimeRef.current = 0;
+    
+    // Reset refs
+    accumulatedTimeRef.current = 0;
+    startTimeRef.current = Date.now();
     lastUpdateRef.current = 0;
-    animationFrameRef.current = requestAnimationFrame(tick);
-  }, [tick]);
+
+    setTimerState({ isRunning: true, isPaused: false });
+  }, [costPerSecond]);
 
   const pause = useCallback(() => {
-    if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current);
-      pausedTimeRef.current = performance.now() - (startTimeRef.current || 0);
+    // Calculate and save the time from the current segment
+    if (startTimeRef.current) {
+      const now = Date.now();
+      accumulatedTimeRef.current += (now - startTimeRef.current);
+      startTimeRef.current = null;
     }
     setTimerState({ isRunning: true, isPaused: true });
   }, []);
 
   const resume = useCallback(() => {
+    // Start a new segment
+    startTimeRef.current = Date.now();
     setTimerState({ isRunning: true, isPaused: false });
-    startTimeRef.current = null;
-    animationFrameRef.current = requestAnimationFrame(tick);
-  }, [tick]);
+  }, []);
 
   const stop = useCallback(() => {
-    if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current);
-    }
     setMeetingData(prev => ({
       ...prev,
       endTime: new Date(),
     }));
     setTimerState({ isRunning: false, isPaused: false });
+    startTimeRef.current = null;
   }, []);
 
   const reset = useCallback(() => {
-    if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current);
-    }
     setMeetingData({
       elapsedSeconds: 0,
       totalCost: 0,
@@ -142,17 +164,8 @@ export function useMeetingTimer(config: MeetingConfig) {
     setCostHistory([]);
     setTimerState({ isRunning: false, isPaused: false });
     startTimeRef.current = null;
-    pausedTimeRef.current = 0;
+    accumulatedTimeRef.current = 0;
     lastUpdateRef.current = 0;
-  }, []);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-    };
   }, []);
 
   return {
