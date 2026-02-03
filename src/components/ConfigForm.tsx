@@ -41,7 +41,7 @@ export function ConfigForm({ onStart }: ConfigFormProps) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.5 }}
-      className="w-full max-w-xl mx-auto space-y-8"
+      className="w-full max-w-[37rem] mx-auto space-y-8"
     >
       {/* Header */}
       <div className="text-center space-y-2">
@@ -125,7 +125,7 @@ export function ConfigForm({ onStart }: ConfigFormProps) {
           </div>
 
           {/* Rate Presets */}
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap justify-center gap-2">
             {ratePresets.map((preset) => (
               <Badge
                 key={preset.label}
