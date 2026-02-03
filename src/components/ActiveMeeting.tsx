@@ -4,8 +4,8 @@ import { Pause, Play, Square, Clock } from 'lucide-react';
 import { MoneyTicker } from './MoneyTicker';
 import { EquivalenceDisplay } from './EquivalenceDisplay';
 import { CostChart } from './CostChart';
+import { formatCurrency } from '@/lib/equivalences';
 import type { MeetingConfig, MeetingData, TimerState } from '@/hooks/useMeetingTimer';
-
 interface CostDataPoint {
   time: number;
   cost: number;
@@ -73,8 +73,7 @@ export function ActiveMeeting({
         <div className="mt-4 text-sm text-muted-foreground">
           Burning at{' '}
           <span className="text-primary font-semibold">
-            {config.currency === 'USD' ? '$' : '€'}
-            {((config.attendees * config.hourlyRate) / 60).toFixed(2)}/min
+            {formatCurrency((config.attendees * config.hourlyRate) / 60, config.currency)}/min
           </span>
         </div>
       </motion.div>
@@ -119,7 +118,7 @@ export function ActiveMeeting({
               Rate/Person
             </div>
             <div className="text-xl font-bold font-mono">
-              {config.currency === 'USD' ? '$' : '€'}{config.hourlyRate}/h
+              {formatCurrency(config.hourlyRate, config.currency)}/h
             </div>
           </div>
           <div>
@@ -127,8 +126,7 @@ export function ActiveMeeting({
               Cost/Person
             </div>
             <div className="text-xl font-bold font-mono text-primary">
-              {config.currency === 'USD' ? '$' : '€'}
-              {(data.totalCost / config.attendees).toFixed(2)}
+              {formatCurrency(data.totalCost / config.attendees, config.currency)}
             </div>
           </div>
         </div>

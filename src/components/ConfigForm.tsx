@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Users, DollarSign, Flame, Euro } from 'lucide-react';
+import { formatCurrency } from '@/lib/equivalences';
 import type { MeetingConfig } from '@/hooks/useMeetingTimer';
 
 interface ConfigFormProps {
@@ -103,16 +104,23 @@ export function ConfigForm({ onStart }: ConfigFormProps) {
               Average Hourly Rate
             </Label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                {currency === 'USD' ? '$' : '€'}
-              </span>
+              {currency === 'USD' && (
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                  $
+                </span>
+              )}
               <Input
                 type="number"
                 min={1}
                 value={hourlyRate}
                 onChange={(e) => setHourlyRate(Math.max(1, parseInt(e.target.value) || 1))}
-                className="w-24 pl-7 text-right font-mono bg-muted/50"
+                className={`w-24 font-mono bg-muted/50 ${currency === 'USD' ? 'pl-7 text-right' : 'pr-7 text-left'}`}
               />
+              {currency === 'EUR' && (
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                  €
+                </span>
+              )}
             </div>
           </div>
 
@@ -129,7 +137,7 @@ export function ConfigForm({ onStart }: ConfigFormProps) {
                 } ${preset.color}`}
                 onClick={() => setHourlyRate(preset.rate)}
               >
-                {preset.label} (${preset.rate}/h)
+                {preset.label} ({currency === 'USD' ? `$${preset.rate}` : `${preset.rate}€`}/h)
               </Badge>
             ))}
           </div>
@@ -159,7 +167,7 @@ export function ConfigForm({ onStart }: ConfigFormProps) {
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">Estimated burn rate:</span>
             <span className="font-mono text-lg text-primary font-semibold">
-              {currency === 'USD' ? '$' : '€'}{estimatedCostPerHour.toLocaleString()}/hour
+              {formatCurrency(estimatedCostPerHour, currency)}/hour
             </span>
           </div>
         </div>
