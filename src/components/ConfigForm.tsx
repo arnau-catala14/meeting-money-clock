@@ -16,7 +16,7 @@ interface ConfigFormProps {
 
 const ratePresets = [
   { label: 'Intern', rate: 15, color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' },
-  { label: 'Dev', rate: 60, color: 'bg-blue-500/20 text-blue-400 border-blue-500/30' },
+  { label: 'Developer', rate: 60, color: 'bg-blue-500/20 text-blue-400 border-blue-500/30' },
   { label: 'Manager', rate: 100, color: 'bg-purple-500/20 text-purple-400 border-purple-500/30' },
   { label: 'Executive', rate: 250, color: 'bg-amber-500/20 text-amber-400 border-amber-500/30' },
 ];
