@@ -25,13 +25,15 @@ export function MoneyTicker({ value, currency }: MoneyTickerProps) {
 
   return (
     <div className="money-display text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-primary">
-      <motion.span
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="inline-block mr-2"
-      >
-        {symbol}
-      </motion.span>
+      {currency === 'USD' && (
+        <motion.span
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="inline-block mr-2"
+        >
+          {symbol}
+        </motion.span>
+      )}
       <AnimatePresence mode="popLayout">
         {formattedParts.map((char, index) => (
           <motion.span
@@ -53,6 +55,15 @@ export function MoneyTicker({ value, currency }: MoneyTickerProps) {
           </motion.span>
         ))}
       </AnimatePresence>
+      {currency === 'EUR' && (
+        <motion.span
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="inline-block ml-2"
+        >
+          {symbol}
+        </motion.span>
+      )}
     </div>
   );
 }

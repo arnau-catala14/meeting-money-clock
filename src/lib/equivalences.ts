@@ -48,17 +48,18 @@ export function getNextEquivalence(cost: number): Equivalence | null {
 }
 
 export function formatCurrency(amount: number, currency: 'USD' | 'EUR'): string {
-  const symbol = currency === 'USD' ? '$' : '€';
-  return `${symbol}${amount.toLocaleString('en-US', {
+  const formattedAmount = amount.toLocaleString('en-US', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  })}`;
+  });
+  return currency === 'USD' ? `$${formattedAmount}` : `${formattedAmount}€`;
 }
 
 export function formatCurrencyShort(amount: number, currency: 'USD' | 'EUR'): string {
-  const symbol = currency === 'USD' ? '$' : '€';
   if (amount >= 1000) {
-    return `${symbol}${(amount / 1000).toFixed(1)}k`;
+    const formatted = `${(amount / 1000).toFixed(1)}k`;
+    return currency === 'USD' ? `$${formatted}` : `${formatted}€`;
   }
-  return `${symbol}${amount.toFixed(0)}`;
+  const formatted = amount.toFixed(0);
+  return currency === 'USD' ? `$${formatted}` : `${formatted}€`;
 }
