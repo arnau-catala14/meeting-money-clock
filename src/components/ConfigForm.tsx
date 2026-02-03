@@ -41,7 +41,7 @@ export function ConfigForm({ onStart }: ConfigFormProps) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.5 }}
-      className="w-full max-w-lg mx-auto space-y-8"
+      className="w-full max-w-xl mx-auto space-y-8"
     >
       {/* Header */}
       <div className="text-center space-y-2">
