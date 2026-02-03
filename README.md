@@ -1,73 +1,60 @@
-# Welcome to your Lovable project
+# 🔥 MeetingBurner
 
-## Project info
+> **"This meeting could have been an email."** — Now you have the data to prove it.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+![Project Status](https://img.shields.io/badge/status-active-success)
+![Tech Stack](https://img.shields.io/badge/built%20with-Lovable%20%2B%20React-blueviolet)
+![License](https://img.shields.io/badge/license-MIT-blue)
 
-## How can I edit this code?
+**MeetingBurner** is a passive-aggressive productivity tool designed to visualize the real-time financial cost of corporate meetings. By inputting the number of attendees and their average hourly rate, the app displays a high-contrast, anxiety-inducing ticker showing exactly how much company money is evaporating second by second.
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## ✨ Key Features
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+- **💸 Real-Time Cost Ticker:** Watch the budget burn with smooth, gas-station-style counter animations.
+- **📊 Dynamic Equivalence Engine:** Instead of just numbers, see what you're losing in real-world terms.
+- **📉 Visual Data:** Live charts rendering the accumulation of cost over time.
+- **🧾 The Receipt:** Generates a detailed "invoice" at the end of the meeting summarizing the total damage.
+- **⚙️ Configurable Settings:** Precise control over attendee count and hourly rates with currency support (€/USD).
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🛠️ Tech Stack
 
-**Use your preferred IDE**
+Built with a focus on performance and modern UI standards:
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- **Core:** [React](https://reactjs.org/) + [Vite](https://vitejs.dev/)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+- **UI Components:** [shadcn/ui](https://ui.shadcn.com/)
+- **Animations:** Framer Motion
+- **Charts:** Recharts
+- **Development:** Accelerated with [Lovable](https://lovable.dev/) & Vibe Coding techniques.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 🚀 Getting Started
 
-Follow these steps:
+### Prerequisites
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+- Node.js & npm installed.
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Installation
 
-# Step 3: Install the necessary dependencies.
-npm i
+1. Clone the repo
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+   ```sh
+   git clone <YOUR_GIT_URL>
+   ```
+
+2. Install dependencies
+
+npm install
+
+3. Run development server
+
 npm run dev
-```
 
-**Edit a file directly in GitHub**
+## ⚠️ Disclaimer
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+**MeetingBurner** is not responsible for any awkward silences, sudden meeting cancellations, or employment terminations resulting from the use of this tool. Use at your own risk.
 
-**Use GitHub Codespaces**
+---
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+_Built with ❤️ (and a bit of sarcasm) by [Arnau Català](https://www.linkedin.com/in/arnaucatala14)_
