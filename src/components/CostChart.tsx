@@ -59,7 +59,7 @@ export function CostChart({ data, currency }: CostChartProps) {
               fontSize={10}
               tickLine={false}
               axisLine={false}
-              tickFormatter={(value) => `${currency === 'USD' ? '$' : '€'}${value}`}
+              tickFormatter={(value) => currency === 'USD' ? `$${value}` : `${value}€`}
               width={50}
             />
             <Tooltip
